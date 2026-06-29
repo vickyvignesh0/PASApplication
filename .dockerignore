@@ -1,0 +1,13 @@
+# Ignore local dependencies and compile directories
+**/node_modules
+**/dist
+**/.angular
+**/bin
+**/obj
+
+# Ignore git and ide files
+.git
+.gitignore
+.vs
+.vscode
+*.log

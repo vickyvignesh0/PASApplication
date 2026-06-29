@@ -1,0 +1,94 @@
+services:
+  # 1. PostgreSQL Database for Marten Document Store
+  pas-db:
+    image: postgres:16-alpine
+    container_name: pas-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pasdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pas-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pasdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. RabbitMQ Message Broker for Event-Driven Communication
+  pas-rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: pas-rabbitmq
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # Management Dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 3. Redis for Distributed Cache & Metrics
+  pas-redis:
+    image: redis:7-alpine
+    container_name: pas-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - pas-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 4. C# .NET 9 Web API Core Service
+  pas-api:
+    build:
+      context: ./src
+      dockerfile: Pas.MpiService/Dockerfile
+    container_name: pas-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__pasdb=Host=pas-db;Port=5432;Database=pasdb;Username=postgres;Password=postgres;Maximum Pool Size=50;
+      - ConnectionStrings__rabbitmq=rabbitmq://pas-rabbitmq
+    ports:
+      - "5000:5000"
+    depends_on:
+      pas-db:
+        condition: service_healthy
+      pas-rabbitmq:
+        condition: service_healthy
+      pas-redis:
+        condition: service_healthy
+
+  # 5. Angular 19 Clinical Cockpit Frontend (Port 4200)
+  pas-clinical:
+    build:
+      context: ./frontend
+      dockerfile: pas-app/Dockerfile
+    container_name: pas-clinical-app
+    ports:
+      - "4200:80"
+    depends_on:
+      - pas-api
+
+  # 6. Angular 19 Administrative Config Frontend (Port 4300)
+  pas-admin:
+    build:
+      context: ./frontend
+      dockerfile: admin-config/Dockerfile
+    container_name: pas-admin-app
+    ports:
+      - "4300:80"
+    depends_on:
+      - pas-api
+
+volumes:
+  pas-db-data:
+  pas-redis-data:

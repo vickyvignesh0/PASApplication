@@ -1,0 +1,19 @@
+# Node dependencies
+**/node_modules/
+**/dist/
+**/.angular/
+
+# .NET / C# build outputs
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.suo
+**/TestResults/
+
+# OS / IDE config files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
