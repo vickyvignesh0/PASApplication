@@ -3,11 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace Pas.Shared;
 
-public static class ChiNumberValidator
+public class ChiNumberValidator : INationalIdentifierValidator
 {
     private static readonly Regex DigitRegex = new(@"^\d{10}$");
 
-    public static bool Validate(string? chiNumber)
+    public string IdentifierName => "CHI";
+
+    public bool Validate(string? chiNumber)
     {
         if (string.IsNullOrWhiteSpace(chiNumber))
             return false;

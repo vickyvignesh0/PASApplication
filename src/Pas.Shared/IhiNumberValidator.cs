@@ -2,11 +2,13 @@ using System.Text.RegularExpressions;
 
 namespace Pas.Shared;
 
-public static class IhiNumberValidator
+public class IhiNumberValidator : INationalIdentifierValidator
 {
     private static readonly Regex DigitRegex = new(@"^\d{10}$");
 
-    public static bool Validate(string? ihiNumber)
+    public string IdentifierName => "IHI";
+
+    public bool Validate(string? ihiNumber)
     {
         if (string.IsNullOrWhiteSpace(ihiNumber))
             return false;

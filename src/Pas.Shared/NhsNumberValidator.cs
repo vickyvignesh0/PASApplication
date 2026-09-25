@@ -2,11 +2,13 @@ using System.Text.RegularExpressions;
 
 namespace Pas.Shared;
 
-public static class NhsNumberValidator
+public class NhsNumberValidator : INationalIdentifierValidator
 {
     private static readonly Regex DigitRegex = new(@"^\d{10}$");
 
-    public static bool Validate(string? nhsNumber)
+    public string IdentifierName => "NHS";
+
+    public bool Validate(string? nhsNumber)
     {
         if (string.IsNullOrWhiteSpace(nhsNumber))
             return false;

@@ -46,3 +46,100 @@
   box-shadow: 0 0 10px rgba(0, 150, 57, 0.2);
   border-color: rgba(0, 150, 57, 0.4);
 }
+
+/* Minimalist and Modern Box Buttons / Panels */
+.btn-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f172a;
+  background-color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0f172a;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-box:hover {
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+.btn-box:active {
+  transform: scale(0.95);
+}
+
+.btn-box-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f172a;
+  background-color: #0f172a;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-box-primary:hover {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+.btn-box-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-box-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ef4444;
+  background-color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ef4444;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-box-danger:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.btn-box-danger:active {
+  transform: scale(0.95);
+}
+
+.card-box {
+  border: 2px solid #0f172a;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  box-shadow: 4px 4px 0px 0px #0f172a;
+}
+
+.input-box {
+  border: 2px solid #0f172a;
+  background-color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #0f172a;
+  transition: all 0.15s ease-in-out;
+  outline: none;
+}
+
+.input-box:focus {
+  box-shadow: 2px 2px 0px 0px #0f172a;
+}

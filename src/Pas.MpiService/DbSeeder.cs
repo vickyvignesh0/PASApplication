@@ -27,6 +27,9 @@ public static class DbSeeder
         var patient5Id = Guid.Parse("c2e9a21b-871d-40ba-ae29-cc823fb88e21");
         var patient6Id = Guid.Parse("5eb91a4b-88b1-4091-a201-cf92cbb88319");
         var patient7Id = Guid.Parse("8d839212-fc39-4d8b-9021-aa021cbbd210");
+        var patient8Id = Guid.Parse("d9e2a14b-229b-432a-bc90-99c82df09e13");
+        var patient9Id = Guid.Parse("44b2a890-ee82-44df-9118-efbc92e0129a");
+        var patient10Id = Guid.Parse("a9e102bc-bb89-40ea-9021-fe88a101bce2");
 
         var reg1 = new PatientRegisteredEvent(patient1Id, "Alastair", "Campbell", new DateTime(1962, 4, 12), "485 777 3456", null, null, "G83047", "42 High Street", "SW1A 1AA");
         var reg2 = new PatientRegisteredEvent(patient2Id, "Fiona", "O'Connor", new DateTime(1978, 8, 25), null, null, "800 120 4567", "G83047", "12 O'Connell Street", "D01 A274");
@@ -35,6 +38,9 @@ public static class DbSeeder
         var reg5 = new PatientRegisteredEvent(patient5Id, "Declan", "Murphy", new DateTime(2001, 7, 15), null, null, "800 789 1011", "G83047", "5 Merrion Square", "D02 YX02");
         var reg6 = new PatientRegisteredEvent(patient6Id, "Seamus", "Brogan", new DateTime(1984, 5, 20), "419 881 3322", null, null, "G83047", "88 Shankill Road", "BT13 2BD");
         var reg7 = new PatientRegisteredEvent(patient7Id, "Bernadette", "O'Reilly", new DateTime(1947, 9, 8), null, null, "800 234 5678", "G83047", "14 O'Callaghan Ave", "Cork");
+        var reg8 = new PatientRegisteredEvent(patient8Id, "Timothy", "Smith", new DateTime(1980, 1, 1), "555 667 7443", null, null, "G83047", "Create Allergy Lane", "M2 3PT");
+        var reg9 = new PatientRegisteredEvent(patient9Id, "Catherine", "Higgins", new DateTime(1969, 12, 5), "888 123 9988", null, null, "G83047", "99 Coronary Road", "CC1 2CC");
+        var reg10 = new PatientRegisteredEvent(patient10Id, "David", "Gillespie", new DateTime(1952, 6, 18), null, "180652 9987", null, "G83047", "12 Geriatric St", "G1 2GG");
 
         session.Events.StartStream<Patient>(patient1Id, reg1);
         session.Events.StartStream<Patient>(patient2Id, reg2);
@@ -43,17 +49,30 @@ public static class DbSeeder
         session.Events.StartStream<Patient>(patient5Id, reg5);
         session.Events.StartStream<Patient>(patient6Id, reg6);
         session.Events.StartStream<Patient>(patient7Id, reg7);
+        session.Events.StartStream<Patient>(patient8Id, reg8);
+        session.Events.StartStream<Patient>(patient9Id, reg9);
+        session.Events.StartStream<Patient>(patient10Id, reg10);
 
         // Admit some patients to wards (attaching ADT events to patient aggregate stream)
         var adm1 = new PatientAdmittedEvent(Guid.NewGuid(), patient1Id, "Acute Medical Unit (AMU)", "Bed A1", "Dr. Emily Briggs", DateTime.UtcNow.AddHours(-4), "None");
         var adm2 = new PatientAdmittedEvent(Guid.NewGuid(), patient2Id, "Coronary Care Unit (CCU)", "Bay 2 - Bed B", "Dr. Emily Briggs", DateTime.UtcNow.AddDays(-1), "MRSA Screen Positive (Precautionary Isolation)");
-        var adm3 = new PatientAdmittedEvent(Guid.NewGuid(), patient3Id, "Geriatic Assessment Ward", "Bed C4", "Dr. Emily Briggs", DateTime.UtcNow.AddDays(-3), "Fall Risk - High Assist");
+        var adm3 = new PatientAdmittedEvent(Guid.NewGuid(), patient3Id, "Geriatric Assessment Ward", "Bed C4", "Dr. Emily Briggs", DateTime.UtcNow.AddDays(-3), "Fall Risk - High Assist");
         var adm4 = new PatientAdmittedEvent(Guid.NewGuid(), patient5Id, "Acute Medical Unit (AMU)", "Bed A4", "Dr. Emily Briggs", DateTime.UtcNow.AddHours(-12), "COVID-19 Contact - Watch List");
+        var adm5 = new PatientAdmittedEvent(Guid.NewGuid(), patient6Id, "Emergency Department (ED)", "Suture Chair A", "Dr. Emily Briggs", DateTime.UtcNow.AddMinutes(-30), "None");
+        var adm6 = new PatientAdmittedEvent(Guid.NewGuid(), patient7Id, "Emergency Department (ED)", "Resus Bed 1", "Dr. Emily Briggs", DateTime.UtcNow.AddMinutes(-5), "Infection Alert - Triage Isolation");
+        var adm7 = new PatientAdmittedEvent(Guid.NewGuid(), patient8Id, "Acute Medical Unit (AMU)", "Bed A2", "Dr. Emily Briggs", DateTime.UtcNow.AddHours(-18), "Penicillin Allergy");
+        var adm8 = new PatientAdmittedEvent(Guid.NewGuid(), patient9Id, "Coronary Care Unit (CCU)", "Bay 1 - Bed A", "Dr. Emily Briggs", DateTime.UtcNow.AddHours(-36), "None");
+        var adm9 = new PatientAdmittedEvent(Guid.NewGuid(), patient10Id, "Geriatric Assessment Ward", "Bed C1", "Dr. Emily Briggs", DateTime.UtcNow.AddHours(-96), "C. Difficile Positive Isolation");
 
         session.Events.Append(patient1Id, adm1);
         session.Events.Append(patient2Id, adm2);
         session.Events.Append(patient3Id, adm3);
         session.Events.Append(patient5Id, adm4);
+        session.Events.Append(patient6Id, adm5);
+        session.Events.Append(patient7Id, adm6);
+        session.Events.Append(patient8Id, adm7);
+        session.Events.Append(patient9Id, adm8);
+        session.Events.Append(patient10Id, adm9);
 
         // 2. Seed Referrals & Waiting Lists
         var referral1 = new Referral

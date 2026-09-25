@@ -61,6 +61,47 @@ For detailed specifications, operational manuals, and design guides for the Care
 
 ---
 
+## 🛠️ Detailed Tech Stack & Docker Deployment Architecture
+
+### System Architecture Diagram
+![CarePortal PAS System Architecture](docs/pas_architecture_diagram.png)
+
+### Technical Stack Tier Overview
+CarePortal PAS is built on a modern, decoupled, three-tier enterprise architecture:
+
+1. **Presentation Tier (Frontend SPAs)**: Standalone **Angular 19** Single Page Applications utilizing **Experimental Zoneless change detection** powered by **Angular Signals** (`signal`, `computed`, `effect`). This removes global dirty-check repaints, reducing CPU usage to near-zero for idle ticks (crucial for ward screens with ticking breach clocks).
+2. **Application Tier (Backend API)**: A modular **C# ASP.NET Core Web API (.NET 9)** backend utilizing **CQRS** (Command Query Responsibility Segregation) event sourcing logic.
+3. **Data & Messaging Tier (Infrastructure)**:
+   * **PostgreSQL + Marten DB**: Document database and event store, appending clinical event streams to `mt_events` and compiling inline snapshots to the `mt_doc_patient` table.
+   * **Redis**: Used for distributed waitlist metrics and session cache locks.
+   * **RabbitMQ**: The integration message broker executing event-driven micro-service updates via **MassTransit**.
+
+### Docker Container Orchestration
+The system is orchestrated using Docker Compose across 6 decoupled containers:
+* **`pas-postgres`**: PostgreSQL database engine hosting Marten JSONB tables and event streams.
+* **`pas-rabbitmq`**: Message broker coordinating asynchronous integration messages.
+* **`pas-redis`**: Redis instance caching waitlist metrics.
+* **`pas-api`**: C# .NET 9 Web API backend service.
+* **`pas-clinical-app`**: Nginx container serving the Clinical Cockpit Angular application on port `4200`.
+* **`pas-admin-app`**: Nginx container serving the Admin Config Angular application on port `4300`.
+
+### Nginx SPA History Routing Config
+To support deep links and HTML5 history routing (preventing `404 Not Found` errors when users refresh URLs like `/workspace`), the frontend Nginx containers deploy the following redirect rules:
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+---
+
 ## 🗓️ Quick Start Guide (Local Development)
 
 To run the application locally, you have **two options**:

@@ -2,7 +2,9 @@ using Marten;
 using Marten.Events.Projections;
 using MassTransit;
 using Pas.MpiService;
+using Pas.MpiService.Application;
 using Pas.MpiService.Controllers;
+using Pas.Shared;
 using Pas.ServiceDefaults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults and OpenTelemetry configuration
 builder.AddServiceDefaults();
+
+// Add Application Services & Validators
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddSingleton<INationalIdentifierValidator, NhsNumberValidator>();
+builder.Services.AddSingleton<INationalIdentifierValidator, ChiNumberValidator>();
+builder.Services.AddSingleton<INationalIdentifierValidator, IhiNumberValidator>();
 
 // Add Controllers
 builder.Services.AddControllers();
